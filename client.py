@@ -19,7 +19,7 @@ IP = sys.argv[2].split("@")[1].split(":")[0]
 PUERTO = int(sys.argv[2].split('@')[1].split(":")[1])
 
 # Contenido que vamos a enviar
-LINE = METODO + " sip:"+ LOGIN + IP + " SIP/2.0\r\n"
+LINE = METODO + " sip:" + LOGIN + IP + " SIP/2.0\r\n"
 
 
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
