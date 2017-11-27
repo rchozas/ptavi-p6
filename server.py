@@ -27,10 +27,11 @@ class EchoHandler(socketserver.DatagramRequestHandler):
 
     def handle(self):
         # Escribe dirección y puerto del cliente (de tupla client_address)
-        self.wfile.write(b"Servidor responde a la peticion\r\n\r\n")
+        #self.wfile.write(b"Servidor responde a la peticion\r\n\r\n")
         while 1:
             # Leyendo línea a línea lo que nos envía el cliente
             line = self.rfile.read()
+            print(line.decode('utf-8'))
             
             metodos = ["INVITE", "ACK", "BYE"]
             metodo = line.decode('utf-8').split(' ')[0]
@@ -38,11 +39,12 @@ class EchoHandler(socketserver.DatagramRequestHandler):
                 
                 if metodo == "INVITE":
                     enviar = b"SIP/2.0 100 Trying\r\n\r\n"
-                    enviar += b"SIP/2.0 180 Ring\r\n\r\n"
+                    enviar += b"SIP/2.0 180 Ringing\r\n\r\n"
                     enviar += b"SIP/2.0 200 OK\r\n\r\n"
                     self.wfile.write(enviar)
                 elif metodo == "ACK":
-                    aEjecutar = "./mp32rtp -i " + IP +  "-p 23032 <" + FICHERO
+                    aEjecutar = "mp32rtp -i 127.0.0.1 -p 23032 <" + FICHERO
+                    print("vamos a ejecutar", aEjecutar)
                     os.system(aEjecutar)
                 elif metodo == "BYE":
                     self.wfile.write(b'SIP/2.0 200 OK\r\n\r\n')
@@ -50,9 +52,9 @@ class EchoHandler(socketserver.DatagramRequestHandler):
                     enviar = b"SIP/2.0 405 Method Not Allowed\r\n\r\n"
                     self.wfile.write(enviar)
                 else:
-                    self.wfile.write(b'SIP/2.0 400 Bad request\r\n\r\n')
+                    self.wfile.write(b"SIP/2.0 400 Bad request\r\n\r\n")
             else:
-                print("El cliente nos manda " + line.decode('utf-8'))
+                print(line.decode('utf-8'))
 
             # Si no hay más líneas salimos del bucle infinito
             if not line:
